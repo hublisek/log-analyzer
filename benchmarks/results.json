@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "Python": "CPython 3.13.7",
+    "GIL": "włączony",
+    "System": "Windows 10",
+    "Rdzenie CPU": "24",
+    "Workers (CPU / I/O)": "8 / 16",
+    "Powtórzenia": "3"
+  },
+  "results": [
+    {
+      "workload": "CPU",
+      "variant": "sequential",
+      "best_s": 4.0608,
+      "median_s": 4.075,
+      "speedup": 1.0
+    },
+    {
+      "workload": "CPU",
+      "variant": "threads",
+      "best_s": 4.2638,
+      "median_s": 4.2746,
+      "speedup": 0.95
+    },
+    {
+      "workload": "CPU",
+      "variant": "processes",
+      "best_s": 0.7163,
+      "median_s": 0.7184,
+      "speedup": 5.67
+    },
+    {
+      "workload": "I/O",
+      "variant": "sequential",
+      "best_s": 2.1119,
+      "median_s": 2.1139,
+      "speedup": 1.0
+    },
+    {
+      "workload": "I/O",
+      "variant": "threads (Queue+Lock)",
+      "best_s": 0.1396,
+      "median_s": 0.1424,
+      "speedup": 15.13
+    },
+    {
+      "workload": "I/O",
+      "variant": "ThreadPoolExecutor",
+      "best_s": 0.1375,
+      "median_s": 0.1383,
+      "speedup": 15.36
+    },
+    {
+      "workload": "I/O",
+      "variant": "asyncio",
+      "best_s": 0.2007,
+      "median_s": 0.2023,
+      "speedup": 10.52
+    },
+    {
+      "workload": "I/O",
+      "variant": "processes",
+      "best_s": 0.3814,
+      "median_s": 0.3956,
+      "speedup": 5.54
+    }
+  ]
+}
