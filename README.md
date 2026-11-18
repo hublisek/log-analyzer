@@ -35,6 +35,8 @@ python -m loganalyzer -v analyze --mode threads           # -v / -vv = więcej l
 
 # 4. wyszukiwanie wpisów (regex na URL)
 python -m loganalyzer search sample_data/access_01.log --status 404 --url-regex "^/api/" --limit 10
+# (Git Bash na Windows zamienia argumenty zaczynające się od "/" na ścieżki –
+#  tam: MSYS_NO_PATHCONV=1 python -m loganalyzer search ...)
 
 # 5. pomiar GIL (wyniki: benchmarks/results.md, .json, .png)
 python -m benchmarks.gil_benchmark --repeats 3
@@ -68,7 +70,7 @@ log-analyzer/
 │   ├── utils/decorators.py    # własne dekoratory
 │   └── data/generator.py      # generator danych testowych
 ├── benchmarks/gil_benchmark.py
-└── tests/test_core.py         # 25 testów pytest
+└── tests/test_core.py         # 32 testy pytest
 ```
 
 ## Mapowanie zagadnień na kod
