@@ -79,7 +79,7 @@ log-analyzer/
 | Dekorator z parametrami | `utils/decorators.py` → `retry(attempts, delay, exceptions)`, `log_call(level)` |
 | Użycie dekoratorów | `services/geoip.py` → `GeoIPDatabase.query` (`@retry`), `core/analyzer.py` → `LogAnalyzer.analyze` (`@measure_time`), `resolve_top_ips` (`@log_call`) |
 | Dekorator metody korzystający z `self` | `utils/decorators.py` → `requires_config`, użyty w `core/analyzer.py` → `LogAnalyzer.analyze`, `LogAnalyzer.resolve_top_ips` |
-| `@property` z setterem | `config.py` → `AnalyzerConfig.workers`, `chunk_size`, `lookup_delay` (walidacja) |
+| `@property` z setterem | `config.py` → `AnalyzerConfig.workers`, `chunk_size`, `lookup_delay`, `top` (walidacja) |
 | `@property` (tylko odczyt) | `core/stats.py` → `LogStats.error_rate`, `LogStats.unique_ips` |
 | `@classmethod` | `config.py` → `AnalyzerConfig.from_file`, `from_directory`; `core/stats.py` → `LogStats.combine` |
 | `@staticmethod` | `config.py` → `AnalyzerConfig.default_workers` |
