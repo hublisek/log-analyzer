@@ -1,0 +1,4 @@
+# Analizator korzysta wyłącznie z biblioteki standardowej.
+# Poniższe pakiety są potrzebne do testów i wykresu w benchmarku.
+pytest>=8.0
+matplotlib>=3.8

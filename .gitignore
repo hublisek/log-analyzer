@@ -1,0 +1,13 @@
+# środowisko
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.idea/
+
+# dane generowane skryptem (python -m loganalyzer generate)
+sample_data/
+out/
