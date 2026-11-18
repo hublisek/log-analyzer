@@ -104,25 +104,36 @@ Zadanie I/O to 200 zapytań GeoIP po 10 ms (opóźnienie symulowane przez `time.
 
 - **Python:** CPython 3.13.7 (GIL włączony)
 - **System:** Windows 10
-- **Rdzenie CPU:** 24
+- **Procesor:** Intel Core i7-13700KF (hybrydowy: 8 rdzeni P z HT + 8 rdzeni E = 24 wątki logiczne)
 - **Workers (CPU / I/O):** 8 / 16
 
 | Obciążenie | Wariant | Najlepszy czas [s] | Mediana [s] | Przyspieszenie |
 |---|---|---:|---:|---:|
-| CPU | sequential | 4.061 | 4.075 | 1.00× |
-| CPU | threads | 4.264 | 4.275 | 0.95× |
-| CPU | processes | 0.716 | 0.718 | 5.67× |
-| I/O | sequential | 2.112 | 2.114 | 1.00× |
-| I/O | threads (Queue+Lock) | 0.140 | 0.142 | 15.13× |
-| I/O | ThreadPoolExecutor | 0.138 | 0.138 | 15.36× |
-| I/O | asyncio | 0.201 | 0.202 | 10.52× |
-| I/O | processes | 0.381 | 0.396 | 5.54× |
+| CPU | sequential | 4.032 | 4.297 | 1.00× |
+| CPU | threads | 8.040 | 8.108 | 0.50× |
+| CPU | processes | 0.737 | 0.765 | 5.47× |
+| I/O | sequential | 2.118 | 2.126 | 1.00× |
+| I/O | threads (Queue+Lock) | 0.140 | 0.141 | 15.13× |
+| I/O | ThreadPoolExecutor | 0.140 | 0.140 | 15.12× |
+| I/O | asyncio | 0.201 | 0.202 | 10.55× |
+| I/O | processes | 0.407 | 0.409 | 5.20× |
 
 ![Wyniki](benchmarks/results.png)
 
 ### Wnioski dotyczące GIL
 
-Przy zadaniu CPU-bound (regex i parsowanie dat w czystym Pythonie) wątki nie dały żadnego przyspieszenia, a były nawet trochę wolniejsze od wersji sekwencyjnej (0,95×). Powodem jest GIL: w danej chwili bajtkod Pythona wykonuje tylko jeden wątek, a pozostałe czekają na blokadę, więc przełączanie wątków jest czystym narzutem. Procesy mają osobne interpretery i osobne GIL-e, więc 8 procesów (8 plików, `default_workers` ogranicza liczbę workerów do 8 mimo 24 rdzeni) przyspieszyło analizę 5,67×. Wynik jest daleki od teoretycznych 8×, bo na Windows procesy uruchamiane są metodą `spawn` (każdy od nowa ładuje interpreter i moduły), a wyniki (`LogStats`) trzeba przesłać między procesami przez `pickle`. Przy zadaniu I/O-bound jest odwrotnie: wątek czekający na sieć lub dysk (tu `time.sleep`) zwalnia GIL, więc 16 wątków przyspieszyło pracę około 15 razy (teoretycznie 16×). To przyspieszenie nie wynika z liczby rdzeni, tylko z tego, że wątki czekają równocześnie. `asyncio` w jednym wątku i bez blokad osiągnął 10,52×, czyli mniej niż wątki. Najpewniej to efekt rozdzielczości zegara pętli zdarzeń na Windows (ok. 15,6 ms): `asyncio.sleep(0.01)` trwa w praktyce ok. 15,6 ms, a 13 rund po 16 zapytań × 15,6 ms ≈ 0,20 s, co zgadza się z pomiarem. Procesy przy I/O też działają (5,54×), ale są najwolniejsze z wariantów współbieżnych, bo uruchomienie 16 interpreterów metodą `spawn` kosztuje więcej niż samo czekanie. Wniosek praktyczny: do zadań I/O wątki lub `asyncio`, do obliczeń w czystym Pythonie procesy. Na free-threaded Pythonie (3.13t/3.14t, `sys._is_gil_enabled() == False`) wątki powinny przyspieszać także zadanie CPU-bound. Benchmark wypisuje stan GIL, więc można to sprawdzić tym samym skryptem.
+Przy zadaniu CPU-bound (regex i parsowanie dat w czystym Pythonie) wątki nie dały żadnego przyspieszenia. Powodem jest GIL: w danej chwili bajtkod Pythona wykonuje tylko jeden wątek, a pozostałe czekają na blokadę, więc przełączanie wątków jest czystym narzutem. W tym pomiarze wątki wyszły nawet 2× wolniej (0,50×), ale to w większości efekt procesora hybrydowego, a nie samego GIL – opisany niżej. Procesy mają osobne interpretery i osobne GIL-e, więc 8 procesów (8 plików, `default_workers` ogranicza liczbę workerów do 8 mimo 24 wątków logicznych) przyspieszyło analizę 5,47×. Wynik jest daleki od teoretycznych 8×, bo na Windows procesy uruchamiane są metodą `spawn` (każdy od nowa ładuje interpreter i moduły), a wyniki (`LogStats`) trzeba przesłać między procesami przez `pickle`. Przy zadaniu I/O-bound jest odwrotnie: wątek czekający na sieć lub dysk (tu `time.sleep`) zwalnia GIL, więc 16 wątków przyspieszyło pracę około 15 razy (teoretycznie 16×). To przyspieszenie nie wynika z liczby rdzeni, tylko z tego, że wątki czekają równocześnie. `asyncio` w jednym wątku i bez blokad osiągnął 10,55×, czyli mniej niż wątki. Najpewniej to efekt rozdzielczości zegara pętli zdarzeń na Windows (ok. 15,6 ms): `asyncio.sleep(0.01)` trwa w praktyce ok. 15,6 ms, a 13 rund po 16 zapytań × 15,6 ms ≈ 0,20 s, co zgadza się z pomiarem. Procesy przy I/O też działają (5,20×), ale są najwolniejsze z wariantów współbieżnych, bo uruchomienie 16 interpreterów metodą `spawn` kosztuje więcej niż samo czekanie. Wniosek praktyczny: do zadań I/O wątki lub `asyncio`, do obliczeń w czystym Pythonie procesy. Na free-threaded Pythonie (3.13t/3.14t, `sys._is_gil_enabled() == False`) wątki powinny przyspieszać także zadanie CPU-bound. Benchmark wypisuje stan GIL, więc można to sprawdzić tym samym skryptem.
+
+### Wpływ procesora hybrydowego (rdzenie P i E)
+
+W pierwszym pomiarze wariant CPU `threads` miał 4,26 s (0,95×), w kolejnych dwóch powtarzalnie ok. 8,1 s (0,50×), choć kod się nie zmienił. Przyczyną jest i7-13700KF: rdzenie energooszczędne (E) liczą ten kod mniej więcej 2× wolniej niż wydajne (P), a Windows sam decyduje, na których rdzeniach uruchamia wątki. Sprawdziłem to, przypinając proces do wybranych rdzeni (`SetProcessAffinityMask`):
+
+| Rdzenie | sequential [s] | threads [s] | threads / sequential |
+|---|---:|---:|---:|
+| tylko P (CPU 0–15) | 3.95 | 4.22 | 0.94× |
+| tylko E (CPU 16–23) | 7.86 | 8.12 | 0.97× |
+
+Na rdzeniach jednego rodzaju wątki są ok. 3–6% wolniejsze od wersji sekwencyjnej – to właściwy koszt GIL (przełączanie wątków i rywalizacja o blokadę). Wynik 0,50× w tabeli oznacza, że wątki puli trafiły na rdzenie E. Procesy tego problemu prawie nie mają, bo każdy proces Windows może osobno umieścić na wolnym rdzeniu P.
 
 > Wyniki zależą od komputera: liczby rdzeni, dysku i systemu. Powyższy pomiar pochodzi z Windows, gdzie procesy startują metodą `spawn`. Na Linuksie (`fork`/`forkserver`) uruchamianie procesów jest zwykle tańsze, więc przyspieszenie wariantu `processes` może być większe.
 

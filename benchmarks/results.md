@@ -7,11 +7,11 @@
 
 | Obciążenie | Wariant | Najlepszy czas [s] | Mediana [s] | Przyspieszenie |
 |---|---|---:|---:|---:|
-| CPU | sequential | 4.061 | 4.075 | 1.00× |
-| CPU | threads | 4.264 | 4.275 | 0.95× |
-| CPU | processes | 0.716 | 0.718 | 5.67× |
-| I/O | sequential | 2.112 | 2.114 | 1.00× |
-| I/O | threads (Queue+Lock) | 0.140 | 0.142 | 15.13× |
-| I/O | ThreadPoolExecutor | 0.138 | 0.138 | 15.36× |
-| I/O | asyncio | 0.201 | 0.202 | 10.52× |
-| I/O | processes | 0.381 | 0.396 | 5.54× |
+| CPU | sequential | 4.032 | 4.297 | 1.00× |
+| CPU | threads | 8.040 | 8.108 | 0.50× |
+| CPU | processes | 0.737 | 0.765 | 5.47× |
+| I/O | sequential | 2.118 | 2.126 | 1.00× |
+| I/O | threads (Queue+Lock) | 0.140 | 0.141 | 15.13× |
+| I/O | ThreadPoolExecutor | 0.140 | 0.140 | 15.12× |
+| I/O | asyncio | 0.201 | 0.202 | 10.55× |
+| I/O | processes | 0.407 | 0.409 | 5.20× |

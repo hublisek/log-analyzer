@@ -11,58 +11,58 @@
     {
       "workload": "CPU",
       "variant": "sequential",
-      "best_s": 4.0608,
-      "median_s": 4.075,
+      "best_s": 4.0317,
+      "median_s": 4.2968,
       "speedup": 1.0
     },
     {
       "workload": "CPU",
       "variant": "threads",
-      "best_s": 4.2638,
-      "median_s": 4.2746,
-      "speedup": 0.95
+      "best_s": 8.0399,
+      "median_s": 8.1081,
+      "speedup": 0.5
     },
     {
       "workload": "CPU",
       "variant": "processes",
-      "best_s": 0.7163,
-      "median_s": 0.7184,
-      "speedup": 5.67
+      "best_s": 0.7365,
+      "median_s": 0.7654,
+      "speedup": 5.47
     },
     {
       "workload": "I/O",
       "variant": "sequential",
-      "best_s": 2.1119,
-      "median_s": 2.1139,
+      "best_s": 2.1178,
+      "median_s": 2.1259,
       "speedup": 1.0
     },
     {
       "workload": "I/O",
       "variant": "threads (Queue+Lock)",
-      "best_s": 0.1396,
-      "median_s": 0.1424,
+      "best_s": 0.14,
+      "median_s": 0.1414,
       "speedup": 15.13
     },
     {
       "workload": "I/O",
       "variant": "ThreadPoolExecutor",
-      "best_s": 0.1375,
-      "median_s": 0.1383,
-      "speedup": 15.36
+      "best_s": 0.1401,
+      "median_s": 0.1404,
+      "speedup": 15.12
     },
     {
       "workload": "I/O",
       "variant": "asyncio",
-      "best_s": 0.2007,
-      "median_s": 0.2023,
-      "speedup": 10.52
+      "best_s": 0.2008,
+      "median_s": 0.2022,
+      "speedup": 10.55
     },
     {
       "workload": "I/O",
       "variant": "processes",
-      "best_s": 0.3814,
-      "median_s": 0.3956,
-      "speedup": 5.54
+      "best_s": 0.4075,
+      "median_s": 0.4094,
+      "speedup": 5.2
     }
   ]
 }
