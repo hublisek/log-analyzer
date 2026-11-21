@@ -146,4 +146,4 @@ Na rdzeniach jednego rodzaju wątki są ok. 3–6% wolniejsze od wersji sekwency
 5. **Prawdziwe API GeoIP** ma limity zapytań i wymaga internetu, przez co demo byłoby zawodne. Zastąpiła je lokalna baza JSON z symulowanym opóźnieniem i losowymi błędami (`fail_rate`), które obsługuje dekorator `@retry`.
 6. **Środowisko na Windows.** Polecenie `python` uruchamiało Pythona 3.10 zamiast 3.13, a projekt wymaga co najmniej 3.11 (`typing.Self`, `enum.StrEnum`), więc na 3.10 kończył się błędem `ImportError` już przy imporcie. Rozwiązaniem było utworzenie środowiska wirtualnego w PyCharmie (*Add Local Interpreter* → Python 3.13) i uruchamianie wszystkiego przez `.venv`. Dodatkowo Git i Claude Code nie były widoczne w `PATH`. Gita doinstalowałem przez `winget`, a po restarcie PyCharma terminal zaczął go widzieć. Wtyczce Claude Code wpisałem w ustawieniach pełną ścieżkę do `claude.exe`, więc nie musi go szukać w `PATH`.
 
-Przy realizacji projektu korzystałem z asystenta AI (Claude), a każdy plik przeanalizowałem.
+Przy realizacji projektu korzystałem z asystenta AI, a każdy plik przeanalizowałem.
